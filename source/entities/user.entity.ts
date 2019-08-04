@@ -1,4 +1,11 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import {
+	Entity,
+	BaseEntity,
+	PrimaryGeneratedColumn,
+	Column,
+	OneToMany,
+} from 'typeorm';
+import { Todo } from './todo.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -11,6 +18,9 @@ export class User extends BaseEntity {
 	@Column({ nullable: true })
 	public username: string;
 
-	@Column({ nullable: false, unique: true })
+	@Column({ nullable: false, unique: false })
 	public password: string;
+
+	@OneToMany(() => Todo, (todo) => todo.id)
+	public todo: Todo;
 }

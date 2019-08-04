@@ -1,6 +1,7 @@
 import { createConnection, Connection } from 'typeorm';
 import { Config } from '../config/config';
 import { User } from '../entities/user.entity';
+import { Todo } from '../entities/todo.entity';
 
 export const initDB = async (): Promise<Connection> => {
 	const connection = await createConnection({
@@ -11,7 +12,7 @@ export const initDB = async (): Promise<Connection> => {
 		synchronize: true,
 		logging: true,
 		cache: true,
-		entities: [User],
+		entities: [User, Todo],
 	});
 
 	return connection;
