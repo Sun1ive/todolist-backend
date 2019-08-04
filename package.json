@@ -1,0 +1,45 @@
+{
+	"name": "todolist-backend",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "cross-env NODE_ENV=production node dist/main.js",
+		"dev": "nodemon",
+		"build": "rimraf dist tsconfig.tsbuildinfo && tsc",
+		"prettier": "prettier --write \"source/**/*.ts\""
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Sun1ive/todolist-backend.git"
+	},
+	"keywords": [],
+	"author": "s.ustinov",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/Sun1ive/todolist-backend/issues"
+	},
+	"homepage": "https://github.com/Sun1ive/todolist-backend#readme",
+	"dependencies": {
+		"apollo-server": "^2.8.1",
+		"cross-env": "^5.2.0",
+		"dotenv": "^8.0.0",
+		"graphql": "^14.4.2",
+		"pg": "^7.12.0",
+		"reflect-metadata": "^0.1.13",
+		"rimraf": "^2.6.3",
+		"typeorm": "^0.2.18"
+	},
+	"devDependencies": {
+		"@types/dotenv": "^6.1.1",
+		"@types/node": "^10.14.14",
+		"@typescript-eslint/eslint-plugin": "^1.13.0",
+		"@typescript-eslint/parser": "^1.13.0",
+		"eslint": "^6.1.0",
+		"eslint-config-prettier": "^6.0.0",
+		"nodemon": "^1.19.1",
+		"prettier": "^1.18.2",
+		"ts-node-dev": "^1.0.0-pre.40",
+		"typescript": "^3.5.3"
+	}
+}
