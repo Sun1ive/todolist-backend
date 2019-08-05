@@ -14,14 +14,7 @@ export interface IBaseResolvers {
 
 export const todoResolvers: IBaseResolvers = {
 	Query: {
-		getTodos: async (root, args, context, info): Promise<Todo[]> => {
-			console.log({
-				root,
-				args,
-				context,
-				info,
-			});
-
+		getTodos: async (): Promise<Todo[]> => {
 			const todos = await getConnection()
 				.getRepository(Todo)
 				.createQueryBuilder('todos')

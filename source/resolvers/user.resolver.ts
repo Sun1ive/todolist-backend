@@ -1,24 +1,70 @@
 import { getConnection } from 'typeorm';
+import { hash, compare } from 'bcrypt';
 import { IBaseResolvers } from './todo.resolver';
 import { User } from '../entities/user.entity';
+import { generateToken } from '../utils/jwt';
+import { ApolloError } from 'apollo-server';
 
 export const userResolvers: IBaseResolvers = {
 	Query: {
-		getUser: async (root, args, context, info): Promise<User | void> => {
-			console.log({
-				root,
-				args,
-				context,
-				info,
-			});
-
+		getUser: async (_, { id }): Promise<User | void> => {
 			const user = await getConnection()
 				.getRepository(User)
 				.createQueryBuilder('user')
-				.where('user.id = :id', { id: args.id })
+				.where('user.id = :id', { id })
 				.getOne();
 
 			return user;
+		},
+	},
+
+	Mutation: {
+		signUp: async (
+			_,
+			{ email, username, password },
+		): Promise<User | ApolloError> => {
+			const userRepo = getConnection().getRepository(User);
+
+			const newUser = await userRepo.save(
+				userRepo.create({
+					email,
+					username,
+					password: await hash(password, 10),
+				}),
+			);
+
+			const token = generateToken({ id: newUser.id, email });
+
+			await userRepo.update({ id: newUser.id }, { token });
+
+			return Object.assign({}, newUser, { token });
+		},
+
+		signIn: async (_, { email, password }): Promise<User | ApolloError> => {
+			const userRepo = getConnection().getRepository(User);
+
+			const user = await userRepo.findOne({
+				where: {
+					email,
+				},
+			});
+
+			if (!user || !(await compare(password, user.password))) {
+				return new ApolloError('Password or email are invalid');
+			}
+
+			const token = generateToken({ id: user.id, email });
+
+			await userRepo.update(
+				{
+					id: user.id,
+				},
+				{
+					token,
+				},
+			);
+
+			return Object.assign({}, user, { token });
 		},
 	},
 };

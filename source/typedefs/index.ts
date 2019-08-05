@@ -5,4 +5,9 @@ export const RootQuery = gql`
 		getTodos: [Todo]!
 		getUser(id: ID!): User
 	}
+
+	type Mutation {
+		signUp(email: String!, password: String!, username: String): User!
+		signIn(email: String!, password: String!): User!
+	}
 `;

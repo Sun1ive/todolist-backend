@@ -8,6 +8,10 @@ interface IConfig {
 	serverOptions: {
 		PORT: number | string;
 	};
+
+	common: {
+		JWT_SECRET: string;
+	};
 }
 
 export const Config: IConfig = {
@@ -19,5 +23,9 @@ export const Config: IConfig = {
 
 	serverOptions: {
 		PORT: process.env.SERVER_PORT || 3344,
+	},
+
+	common: {
+		JWT_SECRET: process.env.JWT_SECRET || 'SECRET',
 	},
 };

@@ -4,6 +4,7 @@ import {
 	PrimaryGeneratedColumn,
 	Column,
 	ManyToOne,
+	Index,
 } from 'typeorm';
 import { User } from './user.entity';
 
@@ -12,6 +13,7 @@ export class Todo extends BaseEntity {
 	@PrimaryGeneratedColumn('uuid')
 	public id: string;
 
+	@Index()
 	@Column({ nullable: true, type: 'text' })
 	public title: string;
 

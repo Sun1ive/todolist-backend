@@ -4,6 +4,7 @@ import {
 	PrimaryGeneratedColumn,
 	Column,
 	OneToMany,
+	Index,
 } from 'typeorm';
 import { Todo } from './todo.entity';
 
@@ -12,6 +13,7 @@ export class User extends BaseEntity {
 	@PrimaryGeneratedColumn('uuid')
 	public id: string;
 
+	@Index()
 	@Column({ nullable: false, unique: true })
 	public email: string;
 
@@ -20,6 +22,10 @@ export class User extends BaseEntity {
 
 	@Column({ nullable: false, unique: false })
 	public password: string;
+
+	@Index()
+	@Column({ nullable: true, unique: false })
+	public token: string;
 
 	@OneToMany(() => Todo, (todo) => todo.id)
 	public todo: Todo;
