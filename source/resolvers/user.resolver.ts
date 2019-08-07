@@ -19,10 +19,7 @@ export const userResolvers: IBaseResolvers = {
 	},
 
 	Mutation: {
-		signUp: async (
-			_,
-			{ email, username, password },
-		): Promise<User | ApolloError> => {
+		signUp: async (_, { email, username, password }): Promise<User | ApolloError> => {
 			const userRepo = getConnection().getRepository(User);
 
 			const newUser = await userRepo.save(

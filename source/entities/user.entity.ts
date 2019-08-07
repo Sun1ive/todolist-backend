@@ -1,11 +1,4 @@
-import {
-	Entity,
-	BaseEntity,
-	PrimaryGeneratedColumn,
-	Column,
-	OneToMany,
-	Index,
-} from 'typeorm';
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToMany, Index } from 'typeorm';
 import { Todo } from './todo.entity';
 
 @Entity()
@@ -27,6 +20,6 @@ export class User extends BaseEntity {
 	@Column({ nullable: true, unique: false })
 	public token: string;
 
-	@OneToMany(() => Todo, (todo) => todo.id)
+	@OneToMany(() => Todo, (todo) => todo.id, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
 	public todo: Todo;
 }

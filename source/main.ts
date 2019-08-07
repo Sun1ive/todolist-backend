@@ -9,48 +9,28 @@ import { initDB } from './database/connection';
 import { User } from './entities/user.entity';
 import { Todo } from './entities/todo.entity';
 import { todoResolvers } from './resolvers/todo.resolver';
-import { typeDef as TodoDef } from './typedefs/todo.typedef';
-import { typeDef as UserDef } from './typedefs/user.typedef';
 import { userResolvers } from './resolvers/user.resolver';
-import { RootQuery } from './typedefs';
 import { GraphQLError } from 'graphql';
+import { importSchema } from 'graphql-import';
+
+const typeDefs = importSchema('./source/typedefs/schema.graphql');
 
 async function mock(connection: Connection) {
 	const userRepo = await connection.getRepository(User);
 	const todoRepo = await connection.getRepository(Todo);
-	await userRepo.delete({});
-	await todoRepo.delete({});
-
-	// const [user] = await userRepo.save([
-	// 	userRepo.create({
-	// 		email: 'google@com',
-	// 		username: 'bob',
-	// 		password: '12345',
-	// 	}),
-	// 	userRepo.create({
-	// 		email: 'google1@com',
-	// 		username: 'bob1',
-	// 		password: '123456',
-	// 	}),
-	// ]);
-	// await todoRepo.save(
-	// 	todoRepo.create({
-	// 		completed: false,
-	// 		title: 'do something',
-	// 		user,
-	// 	}),
-	// );
+	// await userRepo.delete({});
+	// await todoRepo.delete({});
 }
 
 const schema = makeExecutableSchema({
-	typeDefs: [RootQuery, TodoDef, UserDef],
+	typeDefs,
 	resolvers: [todoResolvers, userResolvers],
 });
 
 const server = new ApolloServer({
 	schema,
 	context: ({ req }) => {
-		const token = req.headers.authorization ? req.headers.authorization : '';
+		// const token = req.headers.authorization ? req.headers.authorization : '';
 
 		return {};
 	},
@@ -59,11 +39,13 @@ const server = new ApolloServer({
 			return error;
 		}
 
-		const errId = nanoid();
-		console.log(`Error in request %s`, error.message);
-		console.log(JSON.stringify(error, null, 2));
+		// const errId = nanoid();
+		// console.log(`Error in request %s`, error.message);
+		// console.log(JSON.stringify(error, null, 2));
 
-		return new ApolloError(`Internal Server Error: ${errId}`);
+		// return new ApolloError(`Internal Server Error: ${errId}`);
+
+		return error;
 	},
 });
 

@@ -1,11 +1,4 @@
-import {
-	Entity,
-	BaseEntity,
-	PrimaryGeneratedColumn,
-	Column,
-	ManyToOne,
-	Index,
-} from 'typeorm';
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToOne, Index } from 'typeorm';
 import { User } from './user.entity';
 
 @Entity()
@@ -17,12 +10,10 @@ export class Todo extends BaseEntity {
 	@Column({ nullable: true, type: 'text' })
 	public title: string;
 
+	@Index()
 	@Column({ nullable: true, type: 'boolean' })
 	public completed: boolean;
 
-	@ManyToOne(() => User, (user) => user.id, {
-		onDelete: 'CASCADE',
-		onUpdate: 'CASCADE',
-	})
+	@ManyToOne(() => User)
 	public user: User;
 }

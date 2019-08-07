@@ -1,19 +1,21 @@
 {
-  "compilerOptions": {
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "rootDir": "source",
-    "module": "commonjs",
-    "composite": true,
-    "outDir": "dist",
-    "strict": true,
-    "target": "esnext",
-    "emitDecoratorMetadata": true,
-    "lib": ["dom", "dom.iterable", "es2015", "es2019"],
-    "types": ["node", "reflect-metadata"],
-    "experimentalDecorators": true,
-    "strictNullChecks": true,
-    "strictPropertyInitialization": false,
-    "alwaysStrict": true
-  }
+	"compilerOptions": {
+		"moduleResolution": "node",
+		"esModuleInterop": true,
+		"rootDir": "source",
+		"incremental": true,
+		"module": "commonjs",
+		"composite": true,
+		"outDir": "dist",
+		"strict": true,
+		"target": "esnext",
+		"emitDecoratorMetadata": true,
+		"lib": ["dom", "dom.iterable", "es2015", "es2019"],
+		"types": ["node", "reflect-metadata"],
+		"experimentalDecorators": true,
+		"strictNullChecks": true,
+		"strictPropertyInitialization": false,
+		"alwaysStrict": true
+	},
+	"include": ["source"]
 }

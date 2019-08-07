@@ -1,0 +1,40 @@
+type Query {
+	getTodos: [Todo]!
+	getUser(id: ID!): User
+}
+
+input AddTodoParams {
+	title: String!
+	completed: Boolean!
+	userId: ID!
+}
+
+input UpdateTodoParams {
+	todoId: ID!
+	title: String
+	completed: Boolean
+}
+
+type Mutation {
+	signUp(email: String!, password: String!, username: String): User!
+
+	signIn(email: String!, password: String!): User!
+
+	addTodo(params: AddTodoParams): Todo!
+
+	updateTodo(params: UpdateTodoParams): Todo!
+}
+
+type Todo {
+	id: String!
+	completed: Boolean!
+	title: String!
+	user: User
+}
+
+type User {
+	id: String!
+	username: String
+	email: String!
+	token: String
+}
