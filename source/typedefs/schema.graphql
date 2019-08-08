@@ -34,6 +34,8 @@ type Mutation {
 	addTodo(params: AddTodoParams): Todo!
 
 	updateTodo(params: UpdateTodoParams): Todo!
+
+	deleteTodo(id: ID!): Boolean!
 }
 
 type Todo {

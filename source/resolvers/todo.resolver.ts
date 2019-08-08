@@ -1,6 +1,5 @@
 import { getConnection } from 'typeorm';
 import { Todo } from '../entities/todo.entity';
-import { User } from '../entities/user.entity';
 
 export interface IBaseResolvers {
 	[key: string]: {
@@ -45,6 +44,42 @@ export const todoResolvers: IBaseResolvers = {
 			return todo as Todo;
 		},
 
-		// updateTodo: async (_, { todoId, title, completed }): Promise<Todo> => {},
+		updateTodo: async (_, { params: { todoId, title, completed } }): Promise<Todo> => {
+			await getConnection()
+				.getRepository(Todo)
+				.createQueryBuilder('todo')
+				.update()
+				.set({
+					completed,
+					title,
+					id: todoId,
+				})
+				.where('todo.id = :id', { id: todoId })
+				.execute();
+
+			const todo = (await getConnection()
+				.getRepository(Todo)
+				.createQueryBuilder('todo')
+				.innerJoinAndSelect('todo.user', 'user')
+				.where('todo.id = :id', { id: todoId })
+				.getOne()) as Todo;
+
+			return todo;
+		},
+
+		deleteTodo: async (_, { id }): Promise<boolean> => {
+			try {
+				await getConnection()
+					.getRepository(Todo)
+					.createQueryBuilder('todo')
+					.delete()
+					.where('todo.id = :id', { id })
+					.execute();
+
+				return true;
+			} catch (error) {
+				return false;
+			}
+		},
 	},
 };
