@@ -20,6 +20,6 @@ export class User extends BaseEntity {
 	@Column({ nullable: true, unique: false })
 	public token: string;
 
-	@OneToMany(() => Todo, (todo) => todo.id, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+	@OneToMany(() => Todo, (todo) => todo.user, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
 	public todo: Todo;
 }

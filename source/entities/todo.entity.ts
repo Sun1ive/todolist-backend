@@ -1,4 +1,4 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToOne, Index } from 'typeorm';
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToOne, Index, JoinTable } from 'typeorm';
 import { User } from './user.entity';
 
 @Entity()
@@ -14,6 +14,7 @@ export class Todo extends BaseEntity {
 	@Column({ nullable: true, type: 'boolean' })
 	public completed: boolean;
 
-	@ManyToOne(() => User, (user) => user.id, { cascade: true })
+	@ManyToOne(() => User, (user) => user.todo, { cascade: true })
+	@JoinTable()
 	public user: User;
 }

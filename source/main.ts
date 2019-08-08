@@ -28,6 +28,7 @@ const server = new ApolloServer({
 	playground: true,
 	introspection: true,
 	cors: false,
+	debug: true,
 });
 
 (async () => {

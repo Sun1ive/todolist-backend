@@ -16,6 +16,20 @@ export const userResolvers: IBaseResolvers = {
 
 			return user;
 		},
+
+		getUserTodos: async (_, { id }): Promise<User[] | ApolloError> => {
+			try {
+				const todos = await getConnection()
+					.getRepository(User)
+					.createQueryBuilder('user')
+					.getMany();
+
+				return [];
+			} catch (error) {
+				console.log(error);
+				return new ApolloError(error);
+			}
+		},
 	},
 
 	Mutation: {

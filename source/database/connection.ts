@@ -13,7 +13,6 @@ export const initDB = async (): Promise<Connection> => {
 		username: Config.databaseOptions.user,
 		synchronize: true,
 		logging: !isProd,
-		cache: true,
 		entities: [User, Todo],
 	});
 
