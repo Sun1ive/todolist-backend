@@ -16,8 +16,8 @@ import { importSchema } from 'graphql-import';
 const typeDefs = importSchema('./source/typedefs/schema.graphql');
 
 async function mock(connection: Connection) {
-	const userRepo = await connection.getRepository(User);
-	const todoRepo = await connection.getRepository(Todo);
+	// const userRepo = await connection.getRepository(User);
+	// const todoRepo = await connection.getRepository(Todo);
 	// await userRepo.delete({});
 	// await todoRepo.delete({});
 }

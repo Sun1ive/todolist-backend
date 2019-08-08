@@ -14,6 +14,6 @@ export class Todo extends BaseEntity {
 	@Column({ nullable: true, type: 'boolean' })
 	public completed: boolean;
 
-	@ManyToOne(() => User)
+	@ManyToOne(() => User, (user) => user.id, { cascade: true })
 	public user: User;
 }

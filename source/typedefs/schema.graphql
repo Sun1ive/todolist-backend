@@ -15,10 +15,21 @@ input UpdateTodoParams {
 	completed: Boolean
 }
 
-type Mutation {
-	signUp(email: String!, password: String!, username: String): User!
+input SignUpParams {
+	email: String!
+	password: String!
+	username: String
+}
 
-	signIn(email: String!, password: String!): User!
+input SignInParams {
+	email: String!
+	password:String!
+}
+
+type Mutation {
+	signUp(params: SignUpParams): User!
+
+	signIn(params: SignInParams): User!
 
 	addTodo(params: AddTodoParams): Todo!
 

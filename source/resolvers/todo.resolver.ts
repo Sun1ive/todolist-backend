@@ -22,21 +22,27 @@ export const todoResolvers: IBaseResolvers = {
 	},
 	Mutation: {
 		addTodo: async (_, { params: { title, completed, userId } }): Promise<Todo> => {
-			const todoRepo = getConnection().getRepository(Todo);
-
-			console.log({ title, completed, userId });
-
-			const todo = await todoRepo.save(
-				todoRepo.create({
-					title,
-					completed,
-					user: {
-						id: userId,
+			await getConnection()
+				.createQueryBuilder()
+				.insert()
+				.into(Todo)
+				.values([
+					{
+						title,
+						completed,
+						user: userId,
 					},
-				}),
-			);
+				])
+				.execute();
 
-			return todo;
+			const todo = await getConnection()
+				.getRepository(Todo)
+				.createQueryBuilder('todo')
+				.innerJoinAndSelect('todo.user', 'user')
+				.where('user.id = :id', { id: userId })
+				.getOne();
+
+			return todo as Todo;
 		},
 
 		// updateTodo: async (_, { todoId, title, completed }): Promise<Todo> => {},
