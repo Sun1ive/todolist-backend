@@ -22,46 +22,53 @@ export const userResolvers: IBaseResolvers = {
 		signUp: async (_, { params: { email, username, password } }): Promise<User | ApolloError> => {
 			const userRepo = getConnection().getRepository(User);
 
-			const newUser = await userRepo.save(
-				userRepo.create({
-					email,
-					username,
-					password: await hash(password, 10),
-				}),
-			);
+			try {
+				const newUser = await userRepo.save(
+					userRepo.create({
+						email,
+						username,
+						password: await hash(password, 10),
+					}),
+				);
+				const token = generateToken({ id: newUser.id, email });
 
-			const token = generateToken({ id: newUser.id, email });
+				await userRepo.update({ id: newUser.id }, { token });
 
-			await userRepo.update({ id: newUser.id }, { token });
-
-			return Object.assign({}, newUser, { token });
+				return Object.assign({}, newUser, { token });
+			} catch (error) {
+				return new ApolloError(error);
+			}
 		},
 
 		signIn: async (_, { params: { email, password } }): Promise<User | ApolloError> => {
 			const userRepo = getConnection().getRepository(User);
 
-			const user = await userRepo.findOne({
-				where: {
-					email,
-				},
-			});
+			try {
+				const user = await userRepo.findOne({
+					where: {
+						email,
+					},
+				});
 
-			if (!user || !(await compare(password, user.password))) {
-				return new ApolloError('Password or email are invalid');
+				if (!user || !(await compare(password, user.password))) {
+					return new ApolloError('Password or email are invalid');
+				}
+
+				const token = generateToken({ id: user.id, email });
+
+				await userRepo.update(
+					{
+						id: user.id,
+					},
+					{
+						token,
+					},
+				);
+
+				return Object.assign({}, user, { token });
+			} catch (error) {
+				return new ApolloError(error);
 			}
-
-			const token = generateToken({ id: user.id, email });
-
-			await userRepo.update(
-				{
-					id: user.id,
-				},
-				{
-					token,
-				},
-			);
-
-			return Object.assign({}, user, { token });
 		},
 	},
 };

@@ -3,6 +3,8 @@ import { Config } from '../config/config';
 import { User } from '../entities/user.entity';
 import { Todo } from '../entities/todo.entity';
 
+const isProd = process.env.NODE_ENV === 'production';
+
 export const initDB = async (): Promise<Connection> => {
 	const connection = await createConnection({
 		type: 'postgres',
@@ -10,7 +12,7 @@ export const initDB = async (): Promise<Connection> => {
 		password: Config.databaseOptions.password,
 		username: Config.databaseOptions.user,
 		synchronize: true,
-		logging: true,
+		logging: !isProd,
 		cache: true,
 		entities: [User, Todo],
 	});
