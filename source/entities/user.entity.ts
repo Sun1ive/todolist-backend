@@ -11,15 +11,15 @@ export class User extends BaseEntity {
 	public email: string;
 
 	@Column({ nullable: true })
-	public username: string;
+	public username?: string;
 
 	@Column({ nullable: false, unique: false })
 	public password: string;
 
 	@Index()
 	@Column({ nullable: true, unique: false })
-	public token: string;
+	public token?: string;
 
 	@OneToMany(() => Todo, (todo) => todo.user, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
-	public todo: Todo;
+	public todos: Todo[];
 }

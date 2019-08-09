@@ -4,6 +4,7 @@ import { IBaseResolvers } from './todo.resolver';
 import { User } from '../entities/user.entity';
 import { generateToken } from '../utils/jwt';
 import { ApolloError } from 'apollo-server';
+import { IGetUserTodosResponse } from '../interfaces/user.interface';
 
 export const userResolvers: IBaseResolvers = {
 	Query: {
@@ -17,23 +18,37 @@ export const userResolvers: IBaseResolvers = {
 			return user;
 		},
 
-		getUserTodos: async (_, { id }): Promise<User[] | ApolloError> => {
+		getUserTodos: async (_, { id }): Promise<IGetUserTodosResponse> => {
 			try {
 				const todos = await getConnection()
 					.getRepository(User)
 					.createQueryBuilder('user')
-					.getMany();
+					.innerJoinAndSelect('user.todos', 'todo')
+					.where('user.id = :id', { id })
+					.getOne();
 
-				return [];
+				if (!todos) {
+					throw new ApolloError('User with this id was not found');
+				}
+
+				const user = {
+					username: todos.username,
+					email: todos.email,
+					id: todos.id,
+					token: todos.token,
+					todos: todos.todos,
+				};
+
+				return user;
 			} catch (error) {
 				console.log(error);
-				return new ApolloError(error);
+				throw new ApolloError(error);
 			}
 		},
 	},
 
 	Mutation: {
-		signUp: async (_, { params: { email, username, password } }): Promise<User | ApolloError> => {
+		signUp: async (_, { params: { email, username, password } }): Promise<User> => {
 			const userRepo = getConnection().getRepository(User);
 
 			try {
@@ -46,15 +61,22 @@ export const userResolvers: IBaseResolvers = {
 				);
 				const token = generateToken({ id: newUser.id, email });
 
-				await userRepo.update({ id: newUser.id }, { token });
+				await getConnection()
+					.createQueryBuilder()
+					.update(User)
+					.set({
+						token,
+					})
+					.where('id = :id', { id: newUser.id })
+					.execute();
 
 				return Object.assign({}, newUser, { token });
 			} catch (error) {
-				return new ApolloError(error);
+				throw new ApolloError(error);
 			}
 		},
 
-		signIn: async (_, { params: { email, password } }): Promise<User | ApolloError> => {
+		signIn: async (_, { params: { email, password } }): Promise<User> => {
 			const userRepo = getConnection().getRepository(User);
 
 			try {
@@ -65,7 +87,7 @@ export const userResolvers: IBaseResolvers = {
 				});
 
 				if (!user || !(await compare(password, user.password))) {
-					return new ApolloError('Password or email are invalid');
+					throw new ApolloError('Password or email are invalid');
 				}
 
 				const token = generateToken({ id: user.id, email });
@@ -81,7 +103,7 @@ export const userResolvers: IBaseResolvers = {
 
 				return Object.assign({}, user, { token });
 			} catch (error) {
-				return new ApolloError(error);
+				throw new ApolloError(error);
 			}
 		},
 	},

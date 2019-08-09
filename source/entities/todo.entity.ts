@@ -14,7 +14,7 @@ export class Todo extends BaseEntity {
 	@Column({ nullable: true, type: 'boolean' })
 	public completed: boolean;
 
-	@ManyToOne(() => User, (user) => user.todo, { cascade: true })
+	@ManyToOne(() => User, (user) => user.todos, { cascade: true, onDelete: 'CASCADE' })
 	@JoinTable()
 	public user: User;
 }

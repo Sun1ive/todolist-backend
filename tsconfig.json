@@ -10,7 +10,7 @@
 		"strict": true,
 		"target": "esnext",
 		"emitDecoratorMetadata": true,
-		"lib": ["dom", "dom.iterable", "es2015", "es2019"],
+		"lib": ["dom", "dom.iterable", "es2015", "es2019", "esnext.asynciterable"],
 		"types": ["node", "reflect-metadata"],
 		"experimentalDecorators": true,
 		"strictNullChecks": true,
