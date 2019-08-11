@@ -1,8 +1,13 @@
 import { sign, verify } from 'jsonwebtoken';
 import { Config } from '../config/config';
 
-export const generateToken = ({ id, email }: { id: string; email: string }) =>
-	sign({ id, email }, Config.common.JWT_SECRET, {
+export interface IGenerateTokenParams {
+	email: string;
+	id: string;
+}
+
+export const generateToken = ({ email, id }: IGenerateTokenParams) =>
+	sign({ email, id }, Config.common.JWT_SECRET, {
 		expiresIn: '1h',
 	});
 

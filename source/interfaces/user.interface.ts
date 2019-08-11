@@ -1,9 +1,7 @@
-import { Todo } from '../entities/todo.entity';
-
-export interface IGetUserTodosResponse {
-	username?: string;
-	id: string;
+export interface IUpdateUserParams {
 	email: string;
 	token?: string;
-	todos: Todo[];
+	username?: string;
+	id?: string;
+	password?: string;
 }

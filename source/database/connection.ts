@@ -1,11 +1,14 @@
-import { createConnection, Connection } from 'typeorm';
+import { createConnection, Connection, useContainer } from 'typeorm';
 import { Config } from '../config/config';
 import { User } from '../entities/user.entity';
 import { Todo } from '../entities/todo.entity';
+import Container from 'typedi';
 
 const isProd = process.env.NODE_ENV === 'production';
 
 export const initDB = async (): Promise<Connection> => {
+	useContainer(Container);
+
 	const connection = await createConnection({
 		type: 'postgres',
 		database: Config.databaseOptions.name,
