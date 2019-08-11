@@ -4,7 +4,7 @@ import { ApolloError } from 'apollo-server-core';
 import { User } from '../../entities/user.entity';
 import { Repository } from 'typeorm';
 import { Todo } from '../../entities/todo.entity';
-import { AddTodoArgs } from './todo.args';
+import { AddTodoArgs, UpdateTodoArgs, DeleteTodoArgs } from './todo.args';
 import { decodeToken, validateToken } from '../../utils/jwt';
 
 @Resolver(() => Todo)
@@ -17,8 +17,6 @@ export class TodoResolver {
 	@Mutation(() => Todo)
 	public async AddTodo(@Arg('data') { completed, title, token }: AddTodoArgs): Promise<Todo> {
 		try {
-			console.log({ title, token, completed });
-
 			const decoded = decodeToken(token);
 			if (!decoded) {
 				throw new ApolloError('Invalid token', '403');
@@ -28,10 +26,7 @@ export class TodoResolver {
 				throw new ApolloError('Token has been expired', '401');
 			}
 
-			console.log(decoded);
-
 			const { id } = decoded as { id: string };
-			console.log(id);
 			const todo = new Todo();
 			todo.title = title;
 			todo.completed = completed;
@@ -46,7 +41,55 @@ export class TodoResolver {
 
 			return todo;
 		} catch (error) {
-			throw new ApolloError(`Error in addTodo mutation ${error.message}`, '403');
+			throw new ApolloError(`Error in addTodo mutation ${error.message}`, '500');
+		}
+	}
+
+	@Mutation(() => Todo)
+	public async UpdateTodo(@Arg('data') { id, ...rest }: UpdateTodoArgs): Promise<Todo> {
+		try {
+			await this.todoRepository.update({ id }, rest);
+			const todo = await this.todoRepository.findOne({ id });
+
+			return todo as Todo;
+		} catch (error) {
+			console.log('Error in update ', error);
+
+			throw new ApolloError(`Error in UpdateTodo ${error.message}`, '500');
+		}
+	}
+
+	@Mutation(() => Todo)
+	public async DeleteTodo(@Arg('data') { token, todoId }: DeleteTodoArgs): Promise<boolean> {
+		try {
+			const decoded = decodeToken(token);
+			if (!decoded) {
+				throw new ApolloError('Invalid token', '403');
+			}
+
+			if (!validateToken(token)) {
+				throw new ApolloError('Token has been expired', '401');
+			}
+
+			const { id } = decoded as { id: string };
+
+			const user = await this.userRepository
+				.createQueryBuilder('user')
+				.innerJoin('user.todos', 'todos')
+				.where('user.id = :id', { id })
+				.getOne();
+
+			if (!user) {
+				throw new ApolloError(`This Todo does not exists`, '403');
+			}
+
+			await this.todoRepository.delete({
+				id: todoId,
+			});
+
+			return true;
+		} catch (error) {
+			throw new ApolloError(`Error in DeleteTodo ${error.message}`, '500');
 		}
 	}
 }

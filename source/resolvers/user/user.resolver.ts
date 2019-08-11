@@ -18,8 +18,7 @@ export class UserResolver {
 
 	@Query(() => User)
 	public async me(@Arg('data') { token }: MeArgs): Promise<User> {
-		const user = await getConnection()
-			.getRepository(User)
+		const user = await this.userRepository
 			.createQueryBuilder('user')
 			.where('user.token = :token', { token })
 			.getOne();
@@ -66,28 +65,20 @@ export class UserResolver {
 
 	@Mutation(() => User)
 	public async Register(@Arg('data') { email, username, password }: AuthArgs): Promise<User> {
-		const repo = getConnection().getRepository(User);
+		const user = new User();
+		user.email = email;
+		user.username = username;
+		user.password = await hashPassword(password);
 
-		const insertResult = await repo
+		const insertResult = await this.userRepository
 			.createQueryBuilder('user')
 			.insert()
 			.into(User)
-			.values([
-				{
-					email,
-					username,
-					password: await hashPassword(password),
-				},
-			])
+			.values(user)
 			.execute();
 
 		const userId = insertResult.raw[0].id;
 		const token = generateToken({ email, id: userId });
-
-		const user = await repo
-			.createQueryBuilder('user')
-			.where('user.id = :id', { id: userId })
-			.getOne();
 
 		await this.updateUser({
 			email,

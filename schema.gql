@@ -15,6 +15,11 @@ input AuthArgs {
   password: String!
 }
 
+input DeleteTodoArgs {
+  todoId: ID!
+  token: String!
+}
+
 input MeArgs {
   token: String!
 }
@@ -23,6 +28,8 @@ type Mutation {
   Login(data: AuthArgs!): User!
   Register(data: AuthArgs!): User!
   AddTodo(data: AddTodoArgs!): Todo!
+  UpdateTodo(data: UpdateTodoArgs!): Todo!
+  DeleteTodo(data: DeleteTodoArgs!): Todo!
 }
 
 type Query {
@@ -34,6 +41,12 @@ type Todo {
   title: String!
   completed: Boolean!
   user: User!
+}
+
+input UpdateTodoArgs {
+  id: ID!
+  title: String
+  completed: Boolean
 }
 
 type User {

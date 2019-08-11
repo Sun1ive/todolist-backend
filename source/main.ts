@@ -22,6 +22,9 @@ import { TodoResolver } from './resolvers/todo/todo.resolver';
 
 		const server = new ApolloServer({
 			schema,
+			formatResponse: (response: any) => {
+				return response;
+			},
 			formatError: (error: GraphQLError) => {
 				return error;
 			},
