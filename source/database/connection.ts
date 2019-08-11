@@ -12,16 +12,15 @@ export const initDB = async (): Promise<Connection> => {
 		database: Config.databaseOptions.name,
 		password: Config.databaseOptions.password,
 		username: Config.databaseOptions.user,
+		host: Config.databaseOptions.host,
 		synchronize: true,
 		logging: !isProd,
 		entities: [User, Todo],
 	};
 
-	const dbOptions = !isProd ? baseOptions : { ...baseOptions, url: Config.databaseOptions.url };
-
 	const connection = await createConnection({
 		type: 'postgres',
-		...dbOptions,
+		...baseOptions,
 	});
 
 	return connection;
