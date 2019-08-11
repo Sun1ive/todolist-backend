@@ -3,6 +3,7 @@ interface IConfig {
 		name: string;
 		password: string;
 		user: string;
+		url: string;
 	};
 
 	serverOptions: {
@@ -16,6 +17,7 @@ interface IConfig {
 
 export const Config: IConfig = {
 	databaseOptions: {
+		url: process.env.DB_URL || 'localhost',
 		name: process.env.DB_NAME || 'todos',
 		password: process.env.DB_PASSWORD || 'postgres',
 		user: process.env.DB_USER || 'postgres',

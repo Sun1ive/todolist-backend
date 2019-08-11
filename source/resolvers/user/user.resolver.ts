@@ -21,7 +21,6 @@ export class UserResolver {
 		const user = await getConnection()
 			.getRepository(User)
 			.createQueryBuilder('user')
-			.leftJoinAndSelect('user.todos', 'todos')
 			.where('user.token = :token', { token })
 			.getOne();
 
@@ -40,22 +39,14 @@ export class UserResolver {
 			.where('user.id = :id', { id })
 			.getMany();
 
-		console.log('TODOS', todos);
-
 		return todos || [];
 	}
 
 	@Mutation(() => User)
 	public async Login(@Arg('data') { email, password }: AuthArgs): Promise<User> {
-		// const user = await repo
-		// 	.createQueryBuilder('user')
-		// 	.leftJoinAndSelect('user.todos', 'todos')
-		// 	.where('user.email = :email', { email })
-		// 	.getOne();
-
 		const user = await this.userRepository
 			.createQueryBuilder('user')
-			.where('email= :email', { email })
+			.where('email = :email', { email })
 			.getOne();
 
 		if (!user) {
@@ -96,7 +87,6 @@ export class UserResolver {
 		const user = await repo
 			.createQueryBuilder('user')
 			.where('user.id = :id', { id: userId })
-			.leftJoinAndSelect('user.todos', 'todos')
 			.getOne();
 
 		await this.updateUser({

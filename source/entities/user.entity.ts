@@ -8,7 +8,7 @@ import { IsNotEmpty, MaxLength, IsEmail } from 'class-validator';
 export class User extends BaseEntity {
 	@PrimaryGeneratedColumn('uuid')
 	@Field(() => ID)
-	public readonly id: string;
+	public id: string;
 
 	@Index()
 	@Field()

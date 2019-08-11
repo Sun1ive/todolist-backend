@@ -7,20 +7,17 @@ import { initDB } from './database/connection';
 import { GraphQLError } from 'graphql';
 import { buildSchema } from 'type-graphql';
 import { UserResolver } from './resolvers/user/user.resolver';
-import { getConnection } from 'typeorm';
-import { User } from './entities/user.entity';
 import { Container } from 'typedi';
+import { TodoResolver } from './resolvers/todo/todo.resolver';
 
 (async () => {
 	await initDB();
-	await getConnection()
-		.getRepository(User)
-		.delete({});
 
 	try {
 		const schema = await buildSchema({
-			resolvers: [UserResolver],
+			resolvers: [UserResolver, TodoResolver],
 			container: Container,
+			emitSchemaFile: true,
 		});
 
 		const server = new ApolloServer({
