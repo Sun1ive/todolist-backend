@@ -29,7 +29,7 @@ type Mutation {
   Register(data: AuthArgs!): User!
   AddTodo(data: AddTodoArgs!): Todo!
   UpdateTodo(data: UpdateTodoArgs!): Todo!
-  DeleteTodo(data: DeleteTodoArgs!): Todo!
+  DeleteTodo(data: DeleteTodoArgs!): Boolean!
 }
 
 type Query {

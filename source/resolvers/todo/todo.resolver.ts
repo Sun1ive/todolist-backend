@@ -59,7 +59,7 @@ export class TodoResolver {
 		}
 	}
 
-	@Mutation(() => Todo)
+	@Mutation(() => Boolean)
 	public async DeleteTodo(@Arg('data') { token, todoId }: DeleteTodoArgs): Promise<boolean> {
 		try {
 			const decoded = decodeToken(token);
@@ -75,12 +75,12 @@ export class TodoResolver {
 
 			const user = await this.userRepository
 				.createQueryBuilder('user')
-				.innerJoin('user.todos', 'todos')
+				.innerJoinAndSelect('user.todos', 'todos')
 				.where('user.id = :id', { id })
 				.getOne();
 
-			if (!user) {
-				throw new ApolloError(`This Todo does not exists`, '403');
+			if (!user || user.todos.map((todo) => todo.id).indexOf(todoId) === -1) {
+				throw new ApolloError(`This todo does not exists`, '401');
 			}
 
 			await this.todoRepository.delete({
