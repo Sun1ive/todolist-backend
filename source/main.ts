@@ -28,7 +28,6 @@ import { TodoResolver } from './resolvers/todo/todo.resolver';
 			playground: true,
 			introspection: true,
 			cors: false,
-			debug: true,
 		});
 
 		server.listen({ port: Config.serverOptions.PORT }).then(({ url }) => {

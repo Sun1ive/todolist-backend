@@ -24,7 +24,7 @@ export const Config: IConfig = {
 	},
 
 	serverOptions: {
-		PORT: process.env.SERVER_PORT || 3344,
+		PORT: process.env.PORT || 3344,
 	},
 
 	common: {
