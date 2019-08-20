@@ -9,6 +9,10 @@ import { generateToken } from '../../utils/jwt';
 import { IUpdateUserParams } from '../../interfaces/user.interface';
 import { Todo } from '../../entities/todo.entity';
 
+/**
+ * @export
+ * @class UserResolver
+ */
 @Resolver(() => User)
 export class UserResolver {
 	public constructor(
@@ -16,6 +20,11 @@ export class UserResolver {
 		@InjectRepository(Todo) private readonly todoRepository: Repository<Todo>,
 	) {}
 
+	/**
+	 * @param {MeArgs} { token }
+	 * @returns {Promise<User>}
+	 * @memberof UserResolver
+	 */
 	@Query(() => User)
 	public async me(@Arg('data') { token }: MeArgs): Promise<User> {
 		const user = await this.userRepository
@@ -30,6 +39,11 @@ export class UserResolver {
 		return user;
 	}
 
+	/**
+	 * @param {User} { id }
+	 * @returns {Promise<Todo[]>}
+	 * @memberof UserResolver
+	 */
 	@FieldResolver()
 	public async todos(@Root() { id }: User): Promise<Todo[]> {
 		const todos = await this.todoRepository
@@ -41,6 +55,11 @@ export class UserResolver {
 		return todos || [];
 	}
 
+	/**
+	 * @param {AuthArgs} { email, password }
+	 * @returns {Promise<User>}
+	 * @memberof UserResolver
+	 */
 	@Mutation(() => User)
 	public async Login(@Arg('data') { email, password }: AuthArgs): Promise<User> {
 		const user = await this.userRepository
@@ -63,6 +82,11 @@ export class UserResolver {
 		return Object.assign({}, user, { token });
 	}
 
+	/**
+	 * @param {AuthArgs} { email, username, password }
+	 * @returns {Promise<User>}
+	 * @memberof UserResolver
+	 */
 	@Mutation(() => User)
 	public async Register(@Arg('data') { email, username, password }: AuthArgs): Promise<User> {
 		console.log({ email, username, password });
@@ -89,6 +113,10 @@ export class UserResolver {
 		return Object.assign({}, user, { token });
 	}
 
+	/**
+	 * @private
+	 * @memberof UserResolver
+	 */
 	private readonly updateUser = async ({ email, ...data }: IUpdateUserParams): Promise<void> => {
 		try {
 			await getConnection()
