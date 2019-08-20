@@ -6,6 +6,9 @@ import { Todo } from '../entities/todo.entity';
 
 const isProd = process.env.NODE_ENV === 'production';
 
+/**
+ * @returns {Promise<Connection>}
+ */
 export const initDB = async (): Promise<Connection> => {
 	useContainer(Container);
 	const baseOptions = {

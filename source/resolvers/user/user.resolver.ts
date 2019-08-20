@@ -65,6 +65,7 @@ export class UserResolver {
 
 	@Mutation(() => User)
 	public async Register(@Arg('data') { email, username, password }: AuthArgs): Promise<User> {
+		console.log({ email, username, password });
 		const user = new User();
 		user.email = email;
 		user.username = username;

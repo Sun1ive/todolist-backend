@@ -9,11 +9,22 @@ import { decodeToken, validateToken } from '../../utils/jwt';
 
 @Resolver(() => Todo)
 export class TodoResolver {
+	/**
+	 *Creates an instance of TodoResolver.
+	 * @param {Repository<User>} userRepository
+	 * @param {Repository<Todo>} todoRepository
+	 * @memberof TodoResolver
+	 */
 	public constructor(
 		@InjectRepository(User) private readonly userRepository: Repository<User>,
 		@InjectRepository(Todo) private readonly todoRepository: Repository<Todo>,
 	) {}
 
+	/**
+	 * @param {AddTodoArgs} { completed, title, token }
+	 * @returns {Promise<Todo>}
+	 * @memberof TodoResolver
+	 */
 	@Mutation(() => Todo)
 	public async AddTodo(@Arg('data') { completed, title, token }: AddTodoArgs): Promise<Todo> {
 		try {
@@ -45,6 +56,11 @@ export class TodoResolver {
 		}
 	}
 
+	/**
+	 * @param {UpdateTodoArgs} { id, ...rest }
+	 * @returns {Promise<Todo>}
+	 * @memberof TodoResolver
+	 */
 	@Mutation(() => Todo)
 	public async UpdateTodo(@Arg('data') { id, ...rest }: UpdateTodoArgs): Promise<Todo> {
 		try {
@@ -59,6 +75,11 @@ export class TodoResolver {
 		}
 	}
 
+	/**
+	 * @param {DeleteTodoArgs} { token, todoId }
+	 * @returns {Promise<boolean>}
+	 * @memberof TodoResolver
+	 */
 	@Mutation(() => Boolean)
 	public async DeleteTodo(@Arg('data') { token, todoId }: DeleteTodoArgs): Promise<boolean> {
 		try {

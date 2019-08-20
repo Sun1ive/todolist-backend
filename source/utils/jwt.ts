@@ -1,6 +1,10 @@
 import { sign, verify, decode } from 'jsonwebtoken';
 import { Config } from '../config/config';
 
+/**
+ * @export
+ * @interface IGenerateTokenParams
+ */
 export interface IGenerateTokenParams {
 	email: string;
 	id: string;
@@ -8,11 +12,18 @@ export interface IGenerateTokenParams {
 
 export type IDecodedResult = string | { [key: string]: any } | null;
 
+/**
+ * @param {IGenerateTokenParams} { email, id }
+ */
 export const generateToken = ({ email, id }: IGenerateTokenParams) =>
 	sign({ email, id }, Config.common.JWT_SECRET, {
 		expiresIn: '1h',
 	});
 
+/**
+ * @param {string} token
+ * @returns {boolean}
+ */
 export const validateToken = (token: string): boolean => {
 	try {
 		verify(token, Config.common.JWT_SECRET);
@@ -23,6 +34,10 @@ export const validateToken = (token: string): boolean => {
 	}
 };
 
+/**
+ * @param {string} token
+ * @returns {IDecodedResult}
+ */
 export const decodeToken = (token: string): IDecodedResult => {
 	try {
 		const decoded = decode(token, {
